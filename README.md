@@ -1,5 +1,4 @@
-# Anime Face Generator  
----
+# <span style="color: #f5b7b1;">⸜(｡˃ ᵕ ˂ )⸝♡</span>Anime Face Generator  <span style="color: #f5b7b1;">♡⸜(｡˃ ᵕ ˂ )⸝</span>
 
 This project applies a **Vanilla DCGAN to generate Anime girl faces**, utilizing TensorFlow to build and train the model. The goal is to create high-quality anime faces by leveraging the power of convolutional layers in both the generator and discriminator.
 
@@ -12,12 +11,10 @@ DCGAN (Deep Convolutional Generative Adversarial Network) is a GAN architecture 
 This architecture was chosen for its ability to learn complex data patterns and **generate high-quality images**.
 
 ## Framework
----
 
 **Tensorflow** was chosen for its optimization and compatibility with a wide range of techniques and technologies. Since a GAN cannot be trained using the `Sequential.fit()` method, Tensorflow is very useful for customizing the model training step and process, including dataset handling, optimizations, and others tools.
 
 ## Dataset
----
 
 The dataset used for this project is the [Anime Face Dataset](https://www.kaggle.com/datasets/splcher/animefacedataset), containing **63,632 images** with a **256x256** resolution, all scraped from [Getchu](www.getchu.com).  
 
@@ -32,7 +29,6 @@ The method `tensorflow.keras.utils.image_dataset_from_directory()` was used to c
 - 2 batches preloaded to optimize reading time.
 
 ## Architecture
----
 
 The architecture used here is a simple DCGAN.
 - The generator have **4 deconvolution layers**, and the discriminator have **4 convolution layers**. Both use a `stride = 2` instead of pooling layers to optimize the training time.
@@ -47,7 +43,6 @@ To maximize the learning of both the generator and the discriminator, two additi
 2. In every x epochs, the learning rate of both is adjusted based on their loss mean.  
 
 ## Results
----
 
 In GANs, **visual results are often more important than traditional metrics**. However, monitoring the losses during training is still crucial to evaluate the convergence between the discriminator and the generator.
 
@@ -55,7 +50,6 @@ Typically, during the initial epochs, the difference in loss between the two mod
 
 Accuracy is also used as an additional metric to monitor the interaction between the models. An ideal discriminator accuracy hovers around 50%, indicating a well-balanced GAN where the generator produces realistic images that successfully confuse the discriminator.
 ### **Metrics Graph**
-
 <p align="center">
     <img src='images/anime_face_dcgan_metrics.png'/>
 </p>
