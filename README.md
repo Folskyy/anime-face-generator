@@ -55,5 +55,5 @@ Accuracy is also used as an additional metric to monitor the interaction between
 ### **Metrics Graph**
 ![GAN metrics along the epochs](images/anime_face_dcgan_metrics.png){style="display: block; margin: auto; width: 50%;"}
 
-#### **Generated Images**
+### **Generated Images**
 ![Grid with 128 Generated images](images/generated_images.png){style="display: block;"}
