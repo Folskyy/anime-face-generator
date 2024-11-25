@@ -1,4 +1,4 @@
-# <span style="color: #f5b7b1;">⸜(｡˃ ᵕ ˂ )⸝♡</span>Anime Face Generator  <span style="color: #f5b7b1;">♡⸜(｡˃ ᵕ ˂ )⸝</span>
+# <img src="images/icon.png" style="width: 2em; height: 2em; vertical-align: middle;"> Anime Face Generator
 
 This project applies a **Vanilla DCGAN to generate Anime girl faces**, utilizing TensorFlow to build and train the model. The goal is to create high-quality anime faces by leveraging the power of convolutional layers in both the generator and discriminator.
 
