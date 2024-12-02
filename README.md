@@ -89,7 +89,7 @@ You can use the notebook directly on Kaggle by following these steps:
 1. Access the notebook using this [Kaggle link](https://www.kaggle.com/code/gabrielvieiracruz/anime-face-dcgan).
 2. Add [this utility script](https://www.kaggle.com/gabrielvieiracruz/dcgan-architecture) as a Notebook input to import the DCGAN class along with its architecture, utility functions and necessary methods.
 
-## Load-Model
+## Load Model
 To test the checkpoints located in the [checkpoints](checkpoints/) directory, modify your code and include the following line after initializing a GAN instance:
 ```python
 gan.load_model(discriminator_path='checkpoints/discriminator_at_epoch_150.keras',
@@ -100,5 +100,8 @@ Now you can generate images using the pre-trained model with this line:
 gan.generate_and_save_images(num_images=8, path='', name='generated_image.png')
 ```
 
-## How-to-use
+## How to use
 All the functions and their parameters are described in the [DCGAN class file](dcgan_model/model.py) and their use is commented on in the [notebook](anime-face-gan.ipynb) as well.
+
+## To-do
+- Translate the notebook [notebook](anime-face-gan.ipynb) and [DCGAN class file](dcgan_model/model.py) to english.
