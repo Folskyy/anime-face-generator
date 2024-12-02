@@ -95,7 +95,7 @@ class GAN:
         discriminator_optimizer (tf.keras.optimizers.Adam): Otimizador para o discriminador.
         history (dict): Histórico de perdas e acurácias do gerador e discriminador.
     """
-    def __init__(self, build_generator, build_discriminator, GEN_LR=0.0002, DISC_LR=0.0001,
+    def __init__(self, build_generator, build_discriminator, GEN_LR=0.0001, DISC_LR=0.0001,
                  BATCH_SIZE=64, NOISE_DIM=100, EPOCHS=100):
         """
         Args:
@@ -417,4 +417,4 @@ class GAN:
         
         # Gera imagens para cada época
         display.clear_output(wait=True)
-        self.generate_and_save_images(epoch + 1)
+        self.generate_and_save_images(epoch + 1, path=path, verbose=True)
