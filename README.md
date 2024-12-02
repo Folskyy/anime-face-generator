@@ -105,3 +105,5 @@ All the functions and their parameters are described in the [DCGAN class file](d
 
 ## To-do
 - Translate the notebook [notebook](anime-face-gan.ipynb) and [DCGAN class file](dcgan_model/model.py) to english.
+- Append the mean in each epoch on the history instead every batch loss
+- Convert the history objects type to serialize
