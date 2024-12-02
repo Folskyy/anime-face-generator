@@ -1,10 +1,17 @@
-# <img src="images/icon.png" style="width: 1em; height: 1em; vertical-align: middle;"> Anime Face Generator
+# <img src="generated_images/icon_1.png" style="width: 1em; height: 1em; vertical-align: middle;"> Anime Face Generator
 
-This project applies a **Vanilla DCGAN to generate Anime girl faces**, utilizing TensorFlow to build and train the model. The goal is to create high-quality anime faces by leveraging the power of convolutional layers in both the generator and discriminator.
+This project applies a **Vanilla DCGAN to generate Anime faces**, utilizing TensorFlow to build and train the model. The goal is to create high-quality anime faces by leveraging the power of convolutional layers in both the generator and discriminator.
 
 <p align="center">
-    <img src='images/dcgan.gif'/>
+    <img src='generated_images/image_per_epoch.gif'/>
 </p>
+
+## Table of Contents
+- [Framework](#Framework)
+- [Dataset](#Dataset)
+- [Pre-processing](#Pre-processing)
+- [Architecture](#Architecture)
+- [Results](#Results)
 
 This is an academic project to conclude **LAMIA's Machine Learning Bootcamp**, which involves applying a simple DCGAN architecture to generate Anime girl faces.  
 DCGAN (Deep Convolutional Generative Adversarial Network) is a GAN architecture that uses deep convolutional layers in both the generator and discriminator. In a GAN, the discriminator tries to identify whether an image is real or generated, while the generator tries to deceive the discriminator into classifying the generated images as real. The DCGAN works in the same way but uses convolutional layers.
@@ -23,7 +30,7 @@ The dataset used for this project is the [Anime Face Dataset](https://www.kaggle
 The dataset was created for the goal *"I just want to generate perfect waifus"*. So, the images don't have labels and are stored in a single directory.  
 The method `tensorflow.keras.utils.image_dataset_from_directory()` was used to create a dataset with the following properties:
 - Images resized to **64x64**, balancing quality and computational efficiency during training.
-- **128 images per batch**.
+- **64 images per batch**.
 - The batches are shuffled every step.
 - Images **normalized to the interval [-1, 1]**.
 - 2 batches preloaded to optimize reading time.
@@ -39,22 +46,23 @@ The architecture used here is a simple DCGAN.
 - 25% of **Dropout** is added to the two middle convolutional layers of the discriminator. This helps prevent overfitting by randomly disabling 25% of the neurons during each training step, forcing the model to learn more robust and generalized features.
 ### Aditional features
 To maximize the learning of both the generator and the discriminator, two additional features were added to the training process:
-1. The **discriminator runs twice on the real images per batch** in every epoch (except when the discriminator becomes too strong).  
-2. In every x epochs, the learning rate of both is adjusted based on their loss mean.  
+1. The **discriminator runs twice on the real images per batch** in each n epoch(s).  
+~~2. In every n epochs, the learning rate of both is adjusted based on their loss mean.~~
 
 ## Results
 
-In GANs, **visual results are often more important than traditional metrics**. However, monitoring the losses during training is still crucial to evaluate the convergence between the discriminator and the generator.
+In GANs, **visual results are often more important than traditional metrics** because the primary goal of the model is to produce outputs that closely resemble real data, which is best evaluated qualitatively. However, monitoring losses during training remains crucial for assessing the convergence and balance between the discriminator and generator. From my training observations, the balance between the losses has proven to be more significant than their absolute convergence.
 
-Typically, during the initial epochs, the difference in loss between the two models can be quite large. Over time, they tend to balance out, with both losses stabilizing around 1. However, this is not a strict rule, as numerous factors can influence this behavior, such as the architecture, dataset, and training parameters.
+During the initial epochs, the loss disparity between the two models is often substantial and unstable. Over time, these losses typically stabilize and approach similar values, often oscillating around 1. Nevertheless, this behavior is not guaranteed, as various factors — including the architecture, dataset, and training parameters — can influence the dynamics.
 
-Accuracy is also used as an additional metric to monitor the interaction between the models. An ideal discriminator accuracy hovers around 50%, indicating a well-balanced GAN where the generator produces realistic images that successfully confuse the discriminator.
+Accuracy can also serve as an additional metric to gauge the interaction between the models. Ideally, the discriminator's accuracy should hover around 50%, reflecting a well-balanced GAN where the generator is producing realistic images that sufficiently confuse the discriminator.
+
 ### **Metrics Graph**
 <p align="center">
-    <img src='images/anime_face_dcgan_metrics.png'/>
+    <img src='generated_images/anime_face_dcgan_metrics.png'/>
 </p>
 
 ### **Generated Images**
 <p align="center">
-    <img src='images/generated_images.png'/>
+    <img src='generated_images/image_at_epoch_150.png'/>
 </p>
