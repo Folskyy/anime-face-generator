@@ -42,7 +42,7 @@ def build_generator(NOISE_DIM=100):
         layers.BatchNormalization(),
         layers.LeakyReLU(),
         
-        layers.Conv2DTranspose(64, 3, strides=2, padding="same", use_bias=False,kernel_initializer=init),
+        layers.Conv2DTranspose(64, 3, strides=2, padding="same", use_bias=False, kernel_initializer=init),
         layers.LeakyReLU(),
         # Função de ativação ideal para valores no intervalo [-1, 1]
         layers.Conv2DTranspose(3, 3, activation="tanh", padding="same")
@@ -95,7 +95,7 @@ class GAN:
         discriminator_optimizer (tf.keras.optimizers.Adam): Otimizador para o discriminador.
         history (dict): Histórico de perdas e acurácias do gerador e discriminador.
     """
-    def __init__(self, build_generator, build_discriminator, GEN_LR=0.0001, DISC_LR=0.0001,
+    def __init__(self, build_generator, build_discriminator, GEN_LR=0.0002, DISC_LR=0.0001,
                  BATCH_SIZE=64, NOISE_DIM=100, EPOCHS=100):
         """
         Args:
@@ -373,25 +373,29 @@ class GAN:
         
         for epoch in range(epochs):
             start = time.time()
-
-            # Cria listas vazias no histórico para adicionar novos valores da nova época.
-            self.history["discriminator_loss"].append([])
-            self.history["discriminator_accuracy"].append([])
-            self.history["generator_loss"].append([])
-            self.history["generator_accuracy"].append([])
+            epoch_dloss, epoch_dacc, epoch_gloss, epoch_gacc = [], [], [], []
             
             for image_batch in dataset:
                 disc_loss, disc_acc, gen_loss, gen_acc = (self.train_step(image_batch, extra_step=True)
                                                           if not epoch%epochs_to_extra_step
                                                           else
                                                           self.train_step(image_batch, extra_step=False))
-
-                self.history["discriminator_loss"][-1].append(disc_loss)
-                self.history["discriminator_accuracy"][-1].append(disc_acc)
-                self.history["generator_loss"][-1].append(gen_loss)
-                self.history["generator_accuracy"][-1].append(gen_acc)
+                epoch_dloss.append(np.mean(disc_loss))
+                epoch_dacc.append(np.mean(disc_acc))
+                epoch_gloss.append(np.mean(gen_loss))
+                epoch_gacc.append(np.mean(gen_acc))
                 
-                sys.stdout.write(f"\rGenerator_loss: {gen_loss:.5f}\tDiscriminator_loss: {disc_loss:.5f}\tGenerator_accuracy: {gen_acc:.5f}\tDiscriminator_accuracy:{disc_acc:.5f}")
+                sys.stdout.write(f"\rGenerator loss: {gen_loss:.5f}\tDiscriminator loss: {disc_loss:.5f}\tGenerator accuracy: {gen_acc:.5f}\tDiscriminator accuracy:{disc_acc:.5f}")
+                
+            epoch_dloss = np.mean(epoch_dloss)
+            epoch_dacc = np.mean(epoch_dacc)
+            epoch_gloss = np.mean(epoch_gloss)
+            epoch_gacc = np.mean(epoch_gacc)
+            
+            self.history["discriminator_loss"].append(epoch_dloss)
+            self.history["discriminator_accuracy"].append(epoch_dacc)
+            self.history["generator_loss"].append(epoch_gloss)
+            self.history["generator_accuracy"].append(epoch_gacc)
                 
             display.clear_output(wait=True)
             self.generate_and_save_images(epoch + 1, path=path, verbose=True)
@@ -407,6 +411,7 @@ class GAN:
 
             epoch_time = time.time()-start
             print(f"Tempo para a época {epoch+1}: {epoch_time:.2f}s.")
+            print(f"Generator loss: {epoch_gloss:.4f}\tDiscriminator loss: {epoch_dloss:.4f}\t")
             
             estimated_time = epoch_time * (epochs - epoch)
             sys.stdout.write(f"Tempo estimado para conclusão do treinamento: ~{round(estimated_time/60)}min\n")
@@ -417,4 +422,4 @@ class GAN:
         
         # Gera imagens para cada época
         display.clear_output(wait=True)
-        self.generate_and_save_images(epoch + 1, path=path, verbose=True)
+        self.generate_and_save_images(epoch + 1)
