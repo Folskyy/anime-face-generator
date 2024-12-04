@@ -27,7 +27,7 @@ This architecture was chosen for its ability to learn complex data patterns and 
 
 
 ## Dataset
-The dataset used for this project is the [Anime Face Dataset](https://www.kaggle.com/datasets/splcher/animefacedataset), containing **63,632 images** with a **256x256** resolution, all scraped from [Getchu](www.getchu.com).  
+The dataset used for this project is the [Anime Face Dataset](https://www.kaggle.com/datasets/splcher/animefacedataset), containing **63,632 images** with a **256x256** resolution, all scraped from [Getchu](https://www.getchu.com).  
 
 ### Pre-processing
 The dataset was created for the goal *"I just want to generate perfect waifus"*. So, the images don't have labels and are stored in a single directory.  
@@ -104,6 +104,7 @@ gan.generate_and_save_images(num_images=8, path='', name='generated_image.png')
 All the functions and their parameters are described in the [DCGAN class file](dcgan_model/model.py) and their use is commented on in the [notebook](anime-face-gan.ipynb) as well.
 
 ## To-do
-- Translate the notebook [notebook](anime-face-gan.ipynb) and [DCGAN class file](dcgan_model/model.py) to english.
+- Translate the notebook [notebook](anime-face-gan.ipynb) and [DCGAN class file](dcgan_model/model.py) comments to english.
 - Append the mean in each epoch on the history instead every batch loss
 - Convert the history objects type to serialize
+- Extra train after apply gradient
