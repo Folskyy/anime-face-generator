@@ -3,5 +3,5 @@ IPython
 keras==3.7
 matplotlib
 numpy
-PIL
 tensorflow==2.16.1
+ipykernel
