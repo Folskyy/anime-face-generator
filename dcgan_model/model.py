@@ -208,13 +208,14 @@ class GAN:
         # Normalizando a acurácia e retornando como float
         return tf.reduce_mean(preds)
     
-    def catch_losses_mean(self, epochs_num=1, verbose=None):
+    def catch_losses_mean(self, epochs_num, verbose=None):
         """
         Retorna a média de loss das últimas {epochs_num} épocas.
         Args:
             epochs_num (int): Número de épocas para calcular a média
             verbose (bool): Exibe as médias obtidas na saída stdout.
         """
+        epochs_num = epochs_num if epochs_num >= 1 else 1
         disc_losses = self.history["discriminator_loss"][-epochs_num:]
         gen_losses  = self.history["generator_loss"][-epochs_num:]
     
@@ -226,8 +227,9 @@ class GAN:
         avg_gen_loss  = np.mean(gen_losses)
         
         if verbose:
-            print(f"Média de perda do discriminador: {avg_disc_loss:.5f}")
-            print(f"Média de perda do gerador: {avg_gen_loss:.5f}")
+            print(f"Média de perda nas últimas {epochs_num} épocas:")
+            print(f"Discriminador: {avg_disc_loss:.5f}")
+            print(f"Gerador: {avg_gen_loss:.5f}")
 
         return avg_disc_loss, avg_gen_loss
 
