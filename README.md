@@ -106,6 +106,6 @@ All the functions and their parameters are described in the [DCGAN class file](d
 ## To-do
 - Translate the notebook [notebook](anime-face-gan.ipynb) and [DCGAN class file](dcgan_model/model.py) comments to english.
 ~~- Append the mean in each epoch on the history instead every batch loss~~
-- Convert the history objects type to serialize
+- Convert the GAN's history objects type to serialize
 - Extra train after apply gradient
-- Add a attr to save how many epochs the model have been trained
+- Add an attr to save how many epochs the model have been trained

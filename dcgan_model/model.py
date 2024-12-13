@@ -25,29 +25,24 @@ def build_generator(NOISE_DIM=100):
     """
     generator = keras.models.Sequential([
         layers.Dense(4*4*1024, kernel_initializer=init, input_dim=NOISE_DIM),
-        layers.BatchNormalization(),
-        layers.LeakyReLU(),
+        layers.LeakyReLU(negative_slope=.1),
 
         layers.Reshape(target_shape=(4, 4, 1024)),
         
-        layers.Conv2DTranspose(512, 3, strides=2, padding="same", use_bias=False, kernel_initializer=init),
-        layers.BatchNormalization(),
-        layers.LeakyReLU(),
+        layers.Conv2DTranspose(512, 3, strides=2, padding="same", use_bias=True, kernel_initializer=init),
+        layers.LeakyReLU(negative_slope=.1),
         
-        layers.Conv2DTranspose(256, 3, strides=2, padding="same", use_bias=False, kernel_initializer=init),
-        layers.BatchNormalization(),
-        layers.LeakyReLU(),
+        layers.Conv2DTranspose(256, 3, strides=2, padding="same", use_bias=True, kernel_initializer=init),
+        layers.LeakyReLU(negative_slope=.1),
         
-        layers.Conv2DTranspose(128, 3, strides=2, padding="same", use_bias=False, kernel_initializer=init),
-        layers.BatchNormalization(),
-        layers.LeakyReLU(),
+        layers.Conv2DTranspose(128, 3, strides=2, padding="same", use_bias=True, kernel_initializer=init),
+        layers.LeakyReLU(negative_slope=.1),
         
-        layers.Conv2DTranspose(64, 3, strides=2, padding="same", use_bias=False, kernel_initializer=init),
-        layers.LeakyReLU(),
+        layers.Conv2DTranspose(64, 3, strides=2, padding="same", use_bias=True,kernel_initializer=init),
+        layers.LeakyReLU(negative_slope=.1),
         # Função de ativação ideal para valores no intervalo [-1, 1]
         layers.Conv2DTranspose(3, 3, activation="tanh", padding="same")
     ])
-
     generator.summary()
     return generator
 
@@ -58,27 +53,25 @@ def build_discriminator():
     discriminator = keras.models.Sequential([
         keras.layers.InputLayer(input_shape=(64, 64, 3)),
 
-        layers.Conv2D(128, 3, strides=2, padding="same", use_bias=False, kernel_initializer=init),
-        layers.BatchNormalization(),
-        layers.LeakyReLU(),
+        layers.Conv2D(128, 3, strides=2, padding="same", use_bias=True, kernel_initializer=init),
+        layers.LeakyReLU(negative_slope=.1),
 
         layers.Conv2D(256, 3, strides=2, padding="same", use_bias=False, kernel_initializer=init),
         layers.BatchNormalization(),
-        layers.LeakyReLU(),
+        layers.LeakyReLU(negative_slope=.1),
         layers.Dropout(.25),
 
         layers.Conv2D(512, 3, strides=2, padding="same", use_bias=False, kernel_initializer=init),
         layers.BatchNormalization(),
-        layers.LeakyReLU(),
+        layers.LeakyReLU(negative_slope=.1),
         layers.Dropout(.25),
         
-        layers.Conv2D(1024, 3, strides=2, padding="same", use_bias=False, kernel_initializer=init),
-        layers.LeakyReLU(),
+        layers.Conv2D(1024, 3, strides=2, padding="same", use_bias=True, kernel_initializer=init),
+        layers.LeakyReLU(negative_slope=.1),
 
         layers.Flatten(),
         layers.Dense(1, activation="sigmoid")
     ])
-
     discriminator.summary()
     return discriminator
 
