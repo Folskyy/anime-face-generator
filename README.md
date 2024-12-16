@@ -110,3 +110,4 @@ All the functions and their parameters are described in the [DCGAN class file](d
 - Convert the GAN's history objects type to serialize
 - Extra train after apply gradient
 - Add an attr to save how many epochs the model have been trained
+- Comment[fid notebook](fid.ipynb)
