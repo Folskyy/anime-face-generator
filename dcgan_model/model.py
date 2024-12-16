@@ -269,6 +269,7 @@ class GAN:
         
         if verbose:
           print('Imagem salva em: ', path)
+        plt.close()
 
     def save_model(self, epoch=1, path=None, metrics=None, verbose=None):
         """
