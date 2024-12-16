@@ -41,7 +41,8 @@ The method `tensorflow.keras.utils.image_dataset_from_directory()` was used to c
 ## Architecture
 The architecture used here is a simple DCGAN.
 - The generator have **4 deconvolution layers**, and the discriminator have **4 convolution layers**. Both use a `stride = 2` instead of pooling layers to optimize the training time.
-- **Batch normalization** is aplied in each layer of the generator and discriminator (except the output layer). This helps to stabilize and accelerate the training by normalizing the activations from the previous layer. This reduces the internal covariate shift, improving the model’s ability to learn and generalize better, and prevents overfitting.
+- **Batch normalization** is applied to each layer of the discriminator (except the output layer). This technique stabilizes and accelerates training by normalizing the activations from the previous layer, reducing the internal covariate shift. As a result, it enhances the model’s ability to learn and generalize effectively while helping to prevent overfitting.
+- In the generator, a **bias layer** is added to each deconvolution block. This enables the generator to explore a broader solution space, improving the adjustment of the output layer and enhancing the quality of the generated images.
 - `LeakyReLu` is used on Deconvolution, Convolution and input layers to aviod *dead units* (commom problem in deep networks).
 - `tanh` is used as the final activation of the generator because it return values between 1 and -1, which is consistent with the normalization of the input images.
 - `sigmoid` used as the final activation of the discriminator. (return values between 0 and 1).
@@ -66,7 +67,7 @@ Accuracy can also serve as an additional metric to gauge the interaction between
 
 ### **Generated Images**
 <p align="center">
-    <img src='generated_images/image_at_epoch_150.png'/>
+    <img src='generated_images/image_at_epoch_100.png'/>
 </p>
 
 ## Installation
