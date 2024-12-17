@@ -161,17 +161,23 @@ class GAN:
         """
         return self.cross_entropy(tf.ones_like(fake_output), fake_output)
 
-    def discriminator_loss(self, real_output, fake_output):
+    def discriminator_loss(self, real_output, fake_output=None):
         """
         Retorna o valor de perda do discriminador em um batch.
         Args:
             fake_output (tf.Tensor): Imagens feitas pelo gerador.
             real_output (tf.Tensor): Imagens reais do dataset.
         """
+        if fake_output is None:
+            total_loss = self.cross_entropy(tf.ones_like(real_output), real_output)
+            return total_loss
+    
         real_loss = self.cross_entropy(tf.ones_like(real_output), real_output)
         fake_loss = self.cross_entropy(tf.zeros_like(fake_output), fake_output)
-        total_loss = float(real_loss) + float(fake_loss)
+        total_loss = real_loss + fake_loss
+        
         return total_loss
+        
 
     @tf.function
     def disc_acc(self, t_preds, f_preds=None):
@@ -326,6 +332,7 @@ class GAN:
         noise = tf.random.normal(shape=(self.BATCH_SIZE, self.NOISE_DIM))
         gen_loss, disc_loss = None, None
         gen_acc, disc_acc = None, None
+        fake_imgs = None
 
         with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
             fake_imgs = self.generator(noise, training=True)
@@ -333,10 +340,6 @@ class GAN:
             # predições do discriminador (com imagens reais e sintéticas)
             real_output = self.discriminator(images, training=True)
             fake_output = self.discriminator(fake_imgs, training=True)
-
-            # Tentar calcular e aplicar o gradiente novamente pode ser melhor
-            if extra_step:
-                real_output = tf.concat([real_output, self.discriminator(images, training=True)], axis=0)
 
             # calculando as métricas de loss
             gen_loss = self.generator_loss(fake_output)
@@ -352,6 +355,18 @@ class GAN:
 
         discriminator_grads = disc_tape.gradient(disc_loss, self.discriminator.trainable_weights)
         self.discriminator_optimizer.apply_gradients(zip(discriminator_grads, self.discriminator.trainable_weights))
+
+        if extra_step:
+            disc_loss2 = None
+            with tf.GradientTape() as disc_tape2:
+                # Tentar calcular e aplicar o gradiente novamente pode ser melhor
+                real_output = self.discriminator(images, training=True)
+                disc_loss2 = self.discriminator_loss(real_output)
+        
+            discriminator_grads2 = disc_tape2.gradient(disc_loss2, self.discriminator.trainable_weights)
+            self.discriminator_optimizer.apply_gradients(zip(discriminator_grads2, self.discriminator.trainable_weights))
+            
+            disc_loss = disc_loss * .75 + disc_loss2 * .25
 
         return disc_loss, disc_acc, gen_loss, gen_acc
 
@@ -419,3 +434,4 @@ class GAN:
         # Gera imagens para cada época
         display.clear_output(wait=True)
         self.generate_and_save_images(epoch + 1)
+# %%
