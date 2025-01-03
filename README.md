@@ -1,4 +1,4 @@
-# <img src="generated_images/icon_1.png" style="width: 1em; height: 1em; vertical-align: middle;"> Anime Face Generator
+# <img src="generated_images/icon_1.png" style="width: 1em; height: 1em; vertical-align: middle;"> Anime Face Generator <img src="generated_images/icon_2.png" style="width: 1em; height: 1em; vertical-align: middle;">
 
 This project applies a **Vanilla DCGAN to generate Anime faces**, utilizing TensorFlow to build and train the model. The goal is to create high-quality anime faces by leveraging the power of convolutional layers in both the generator and discriminator.
 
@@ -18,13 +18,12 @@ This project applies a **Vanilla DCGAN to generate Anime faces**, utilizing Tens
 - [How to use](#how-to-use)
 
 ## Introduction
-This is an academic project to conclude **LAMIA's Machine Learning Bootcamp**, which involves applying a simple DCGAN architecture to generate Anime girl faces.  
+This is an academic project to conclude **LAMIA's Machine Learning and AI Bootcamp**, which involves applying a simple DCGAN architecture to generate Anime faces.  
 DCGAN (Deep Convolutional Generative Adversarial Network) is a GAN architecture that uses deep convolutional layers in both the generator and discriminator. In a GAN, the discriminator tries to identify whether an image is real or generated, while the generator tries to deceive the discriminator into classifying the generated images as real. The DCGAN works in the same way but uses convolutional layers.
 This architecture was chosen for its ability to learn complex data patterns and **generate high-quality images**.
 
 ## Framework
 **Tensorflow** was chosen for its optimization and compatibility with a wide range of techniques and technologies. Since GANs cannot be trained using the `Sequential.fit()` method, TensorFlow's flexibility is invaluable for customizing model training, dataset handling, optimizations, and more.
-
 
 ## Dataset
 The dataset used for this project is the [Anime Face Dataset](https://www.kaggle.com/datasets/splcher/animefacedataset), containing **63,632 images** with a **256x256** resolution, all scraped from [Getchu](https://www.getchu.com).  
@@ -39,14 +38,14 @@ The method `tensorflow.keras.utils.image_dataset_from_directory()` was used to c
 - 2 batches preloaded to optimize reading time.
 
 ## Architecture
-The architecture used here is a simple DCGAN.
-- The generator have **4 deconvolution layers**, and the discriminator have **4 convolution layers**. Both use a `stride = 2` instead of pooling layers to optimize the training time.
-- **Batch normalization** is applied to each layer of the discriminator (except the output layer). This technique stabilizes and accelerates training by normalizing the activations from the previous layer, reducing the internal covariate shift. As a result, it enhances the model’s ability to learn and generalize effectively while helping to prevent overfitting.
+The architecture used here is a simple DCGAN:
+- The generator have **4 deconvolutional layers**, and the discriminator have **4 convolutional layers**. Both use a `stride = 2` instead of pooling layers to optimize the training time.
+- **Batch normalization** is applied to the two middle convolutional layers of the discriminator. This technique stabilizes and accelerates training by normalizing the activations from the previous layer, reducing the internal covariate shift. As a result, it enhances the model’s ability to learn and generalize effectively while helping to prevent overfitting.
 - In the generator, a **bias layer** is added to each deconvolution block. This enables the generator to explore a broader solution space, improving the adjustment of the output layer and enhancing the quality of the generated images.
-- `LeakyReLu` is used on Deconvolution, Convolution and input layers to aviod *dead units* (commom problem in deep networks).
+- `LeakyReLu` is used on Deconvolution, Convolution and input layers to avoid *dead units* (commom problem in deep networks).
 - `tanh` is used as the final activation of the generator because it return values between 1 and -1, which is consistent with the normalization of the input images.
 - `sigmoid` used as the final activation of the discriminator. (return values between 0 and 1).
-- 25% of **Dropout** is added to the two middle convolutional layers of the discriminator. This helps prevent overfitting by randomly disabling 25% of the neurons during each training step, forcing the model to learn more robust and generalized features.
+- 20% of **Dropout** is added to the two middle convolutional layers of the discriminator. This helps prevent overfitting by randomly disabling 20% of the neurons during each training step, forcing the model to learn more robust and generalized features.
 
 ### Aditional features
 To maximize the learning of both the generator and the discriminator, two additional features were added to the training process:
@@ -62,13 +61,28 @@ Accuracy can also serve as an additional metric to gauge the interaction between
 
 ### **Metrics Graph**
 <p align="center">
-    <img src='generated_images/anime_face_dcgan_metrics.png'/>
+    <img src='generated_images/anime_face_gan_metrics.png'/>
 </p>
+
+*The metrics graph illustrates the evolution of the generator and discriminator losses over the training process.*
 
 ### **Generated Images**
 <p align="center">
     <img src='generated_images/image_at_epoch_100.png'/>
 </p>
+
+*These images showcase the model's output after 100 epochs, demonstrating the ability to generate anime-style faces.*
+
+### **Training Details**
+This project leverages a DCGAN architecture to generate anime face images. Below are the parameters and modifications used during training:
+
+#### Initial Training (100 epochs):
+- Generator learning rate: 0.0003
+- Discriminator learning rate: 0.0003
+- An additional step for the discriminator was applied every 2 epochs.
+
+#### Continued Training (100 more epochs):
+- The discriminator's extra step was increased to every epoch, while other parameters remained unchanged.
 
 ## Installation
 You can install the project either from this repository or use the notebook on Kaggle.
@@ -108,6 +122,6 @@ All the functions and their parameters are described in the [DCGAN class file](d
 - Translate the notebook [notebook](anime-face-gan.ipynb) and [DCGAN class file](dcgan_model/model.py) comments to english.
 ~~- Append the mean in each epoch on the history instead every batch loss~~
 - Convert the GAN's history objects type to serialize
-- Extra train after apply gradient
+~~- Extra train after apply gradient~~
 - Add an attr to save how many epochs the model have been trained
 - Comment[fid notebook](fid.ipynb)
