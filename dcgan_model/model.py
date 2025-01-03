@@ -1,4 +1,3 @@
-# %% [code]
 import os
 import sys
 import json
@@ -24,10 +23,10 @@ def build_generator(NOISE_DIM=100):
         NOISE_DIM (int): Tamanho do vetor de rúido.
     """
     generator = keras.models.Sequential([
-        layers.Dense(4*4*1024, kernel_initializer=init, input_dim=NOISE_DIM),
+        layers.Dense(4*4*512, kernel_initializer=init, input_dim=NOISE_DIM),
         layers.LeakyReLU(negative_slope=.1),
 
-        layers.Reshape(target_shape=(4, 4, 1024)),
+        layers.Reshape(target_shape=(4, 4, 512)),
         
         layers.Conv2DTranspose(512, 3, strides=2, padding="same", use_bias=True, kernel_initializer=init),
         layers.LeakyReLU(negative_slope=.1),
@@ -53,20 +52,20 @@ def build_discriminator():
     discriminator = keras.models.Sequential([
         keras.layers.InputLayer(input_shape=(64, 64, 3)),
 
-        layers.Conv2D(128, 3, strides=2, padding="same", use_bias=True, kernel_initializer=init),
+        layers.Conv2D(64, 3, strides=2, padding="same", use_bias=True, kernel_initializer=init),
         layers.LeakyReLU(negative_slope=.1),
+
+        layers.Conv2D(128, 3, strides=2, padding="same", use_bias=False, kernel_initializer=init),
+        layers.BatchNormalization(),
+        layers.LeakyReLU(negative_slope=.1),
+        layers.Dropout(.2),
 
         layers.Conv2D(256, 3, strides=2, padding="same", use_bias=False, kernel_initializer=init),
         layers.BatchNormalization(),
         layers.LeakyReLU(negative_slope=.1),
-        layers.Dropout(.25),
-
-        layers.Conv2D(512, 3, strides=2, padding="same", use_bias=False, kernel_initializer=init),
-        layers.BatchNormalization(),
-        layers.LeakyReLU(negative_slope=.1),
-        layers.Dropout(.25),
+        layers.Dropout(.2),
         
-        layers.Conv2D(1024, 3, strides=2, padding="same", use_bias=True, kernel_initializer=init),
+        layers.Conv2D(512, 3, strides=2, padding="same", use_bias=True, kernel_initializer=init),
         layers.LeakyReLU(negative_slope=.1),
 
         layers.Flatten(),
@@ -74,6 +73,7 @@ def build_discriminator():
     ])
     discriminator.summary()
     return discriminator
+
 
 # tf.config.run_functions_eagerly(True)  # Força execução imediata (sem otimização)
 class GAN:
@@ -117,6 +117,8 @@ class GAN:
             "generator_loss": [],
             "generator_accuracy": []
         }
+
+        self.total_epochs = 0
     
     def adjust_lr(self, avg_disc_loss, avg_gen_loss, tolerance=0.1, min_lr=1e-8):
         """
@@ -421,7 +423,7 @@ class GAN:
                 self.adjust_lr(avg_disc_loss=disc_loss, avg_gen_loss=gen_loss)
 
             epoch_time = time.time()-start
-            print(f"Tempo para a época {epoch+1}: {epoch_time:.2f}s.")
+            print(f"Tempo para a época {self.total_epochs+1}: {epoch_time:.2f}s.")
             print(f"Generator loss: {epoch_gloss:.4f}\tDiscriminator loss: {epoch_dloss:.4f}\t")
             
             estimated_time = epoch_time * (epochs - epoch)
@@ -434,4 +436,4 @@ class GAN:
         # Gera imagens para cada época
         display.clear_output(wait=True)
         self.generate_and_save_images(epoch + 1)
-# %%
+        self.total_epochs += 1
